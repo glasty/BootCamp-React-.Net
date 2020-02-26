@@ -1,0 +1,17 @@
+.movieDetails {
+    .movieThumbnail {
+        width: 100%;
+    }
+
+    .movieGenres {
+        width: 100%;
+
+        ul {
+            padding-left: 0;
+        }
+
+        li {
+            list-style-type: none;
+        }
+    }
+}

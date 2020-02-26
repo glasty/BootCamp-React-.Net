@@ -1,0 +1,111 @@
+.main {
+    width: 100%; 
+}
+
+.sideMenu {
+    position: fixed;
+    right: 0px;
+    width: 0;
+    background-color: #EAEAEA;
+    opacity: 0.8;
+    height: 100%;
+    z-index: 2;
+    transition: 0.5s;
+    overflow-x: hidden;
+    padding-top: 50px;
+    font-family: "Lato", sans-serif;
+}
+
+.button {
+    position: fixed;
+    right: 10px;
+    top: 5px;
+    height: 20px;
+    z-index: 1;
+    display: inline-block;
+    border-radius: 4px;
+    background-color: #6498e6;
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 15px;
+    padding: 15px;
+    transition: all 0.5s;
+    cursor: pointer;
+    margin: 5px;
+    overflow: hidden;
+    border-width: 0;
+  }
+  
+  .button span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+    top: -10px;
+  }
+  
+  .button span:after {
+    content: '\00bb';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -30px;
+    transition: 0.5s;
+  }
+  
+  .button:hover span {
+    padding-right: 15px;
+  }
+  
+  .button:hover span:after {
+    opacity: 1;
+    right: 0;
+  }
+
+.sideOpenButton {
+    position: fixed;
+    right: 10px;
+    top: 10px;
+    width: 100px;
+    z-index: 1;
+    background-color: white;
+    transition: 0.5s;
+    overflow: hidden;
+    padding-left: 0; padding-right: 0;
+    border-width: 0;
+}
+
+.sideMenu .closeButton {
+    border-style: hidden;
+    background-color: transparent;
+    position: absolute;
+    top: 0;
+    right: 120px;
+    font-size: 36px;
+    transition: 0.5s;
+    cursor: pointer;
+}
+
+.sideButtonMenu {
+    float: right;
+    border-style: hidden;
+    outline: 0 !important;
+    background-color: transparent;
+    right: 10px;
+    top: 10px;
+    margin: 10px;
+    width: 100px;
+    z-index: 2;
+    font-weight: bold;
+    color: #333333;
+    text-align: right;
+}
+
+.sideButtonMenu:hover {
+    color: #004080;
+}
+
+.sideButtonMenu:active {
+    color: #0066cc;
+}
