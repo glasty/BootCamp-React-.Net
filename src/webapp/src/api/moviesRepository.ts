@@ -14,7 +14,7 @@ class MovieRepository {
   save = async (movie: IMovie): Promise<IMovie> => {
     const response = await Axios.post<IMovie>(API_URL_M, movie);
 
-    console.log(`[MovieRepository.getAll]: Retrieved response`, response);
+    console.log(`[MovieRepository.save]: Retrieved response`, response);
 
     return response.data;
   };

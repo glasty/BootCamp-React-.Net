@@ -10,6 +10,14 @@ class GenreRepository {
     
         return data;
       };
+
+    save = async (genre: IGenre): Promise<IGenre> => {
+      const response = await Axios.post<IGenre>(API_URL_G, genre);
+
+      console.log(`[GenreRepository.save]: Retrieved response`, response);
+
+      return response.data;
+    }
 }
 
 export default GenreRepository;
