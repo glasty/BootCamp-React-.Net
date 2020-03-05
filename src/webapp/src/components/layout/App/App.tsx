@@ -5,7 +5,7 @@ import IGenre from "../../../model/IGenre";
 import MovieRepository from "../../../api/moviesRepository";
 import MovieList from "../../movies/MovieList";
 import GenreRepository from "../../../api/genresRepository";
-import NewGenre from "../../genres/NewGenre";
+import GenreWindow from "../../genres/GenreWindow";
 
 /*
  * "Root" component that encapsulates whole application. State is managed on this level
@@ -14,8 +14,13 @@ import NewGenre from "../../genres/NewGenre";
 const App: React.FC = () => {
   const [movies, setMovies] = useState<IMovie[]>([]);
   const [genres, setGenres] = useState<IGenre[]>([]);
+  
   const [menuPanel, setMenuPanel] = useState<number>(0);
-  const [genreWindow, setGenreWindow] = useState<boolean>(false);
+  const [genreWindow, setGenreWindow] = useState<number>(0);
+  
+  const [topPopUpWindow, setTopPopUp] = useState<number>(0);
+  const [topPopUpMessage, setTopPopUpMessage] = useState<string>("");
+  const [topPopUpColor, setTopPopUpColor] = useState<string>("");
 
   /*
    * Hook for loading data. Function fetchData() was made async to simplify loading data via MovieRepostiory and GenreRepository.
@@ -58,13 +63,16 @@ const App: React.FC = () => {
         //Find movie in local movie list 
         const index = prevState.findIndex(m => m.id === movie.id);
         if (index > -1) {
+          //ID > 0 - changing existing movie
           if (newState[index].id > 0){
             newState.splice(index, 1, { ...movie });
+          //ID < 0 - creating new movie
           }else{
-            //Delete local record of newly created movie with index < 0
+            //Delete local record of newly created movie with id < 0
             newState = newState.filter(m => m.id !== movie.id);
             //Replace it with response from server with correct id given by the server
             newState = newState.concat(response);
+            showInfo("Movie created", "#2e8b57");
           }
           
         }
@@ -75,7 +83,7 @@ const App: React.FC = () => {
   };
 
   /**
-   * Handler for adding new movie 
+   * Handler for adding new empty movie 
    */
   const addMovieHandler = () => {
     const id: number = Math.min( ...movies.map(m => m.id) ) - 1;
@@ -102,6 +110,10 @@ const App: React.FC = () => {
     }
   }
 
+  /**
+   * Handler for saving new genre in API and SPA
+   * @param newGenre genre to be saved
+   */
   const saveNewGenreHandler = (newGenre: IGenre) => {
     const upData = () => {
       const repo = new GenreRepository();
@@ -111,22 +123,94 @@ const App: React.FC = () => {
 
     upData().then(response => {
       setGenres(prevState => prevState.concat(response));
+      
+      //Show PopUpWindow
+      showInfo("Genre created", "#2e8b57");
     })
+  }
+
+
+  /**
+   * Handler for deleting genre in API and SPA
+   * @param genre genre to be deleted 
+   */
+  const deleteGenreHandler = (genre: IGenre) => {
+    //Check if genre is used in movies - HT? movies.filter(function that returns true or false if given movie contains given genre)
+    const result = movies.filter((movie) => {return movie.genres.findIndex(g => g.id === genre.id) !== -1});
+    if(result.length !== 0){
+      //Show PopUpWindow
+      showInfo("Genre is being used", "#8b752e");
+      return;
+    }
+    
+    const upData = () => {
+      const repo = new GenreRepository();
+
+      return repo.delete(genre);
+    }
+   
+    upData().then(response => {
+      if (response.status === 200){
+        const index = genres.findIndex(g => g.id === genre.id);
+        
+        setGenres(prevState => {
+          prevState.splice(index, 1); 
+          return prevState;
+        });
+
+        //Show PopUpWindow
+        showInfo("Genre deleted", "#8b2e2e");  
+      }
+    })
+  }
+
+  /**
+   * Handler for resolwing if delete/create genre window should be visible
+   * @param type type of the pressed button 
+   */
+  const genreButtonClickHandler = (type: number) => {
+    if (type === genreWindow){
+      setGenreWindow(0);
+    }else{
+      setGenreWindow(type); 
+    }
+  }
+
+  /**
+   * Function to show top pop up info window
+   * @param message Message to be displayed
+   * @param color Color of the window
+   */
+  const showInfo = (message: string, color: string) => {
+    if (topPopUpWindow === 0){
+      setTopPopUp(45);
+      setTopPopUpMessage(message);
+      setTopPopUpColor(color);
+      setTimeout(() => {setTopPopUp(0)}, 4000);
+    }
   }
 
   return (
     <div>      
-        <div className={`${styles.sideMenu}`} style={{width: menuPanel}}>
-          <span className={`${styles.closeButton}`} onClick={() => {setMenuPanel(0); setGenreWindow(false)}}>x</span>
+      <button type="button" onClick={() => {setMenuPanel(150)}} style={{width: menuPanel === 0 ? 100 : 0, paddingLeft: menuPanel === 0 ? 15 : 0, paddingRight: menuPanel === 0 ? 15 : 0}} className={`${styles.button}`} ><span>Options</span></button>
+      <div className={`${styles.sideMenu}`} style={{width: menuPanel}}>
+        <span className={`${styles.closeButton}`} onClick={() => {setMenuPanel(0); genreButtonClickHandler(0)}}>x</span>
 
-          <button type="button" className={`${styles.sideButtonMenu}`} onClick={addMovieHandler}>Add Movie</button>
-          <button type="button" onClick={() => setGenreWindow(prevState => {return !prevState})} className={`${styles.sideButtonMenu}`}>Add Genre</button>
-          <button type="button" className={`${styles.sideButtonMenu}`}>Add Actor</button>
-        </div>
-        {genreWindow ? <NewGenre onGenreCreated={saveNewGenreHandler} genres={genres}></NewGenre> : <></>}
-        
-        <button type="button" onClick={() => {setMenuPanel(150)}} style={{width: menuPanel === 0 ? 100 : 0, paddingLeft: menuPanel === 0 ? 15 : 0, paddingRight: menuPanel === 0 ? 15 : 0}} className={`${styles.button}`} ><span>Options</span></button>
+        <button type="button" className={`${styles.sideButtonMenu}`} onClick={addMovieHandler}>Add Movie</button>
+        <button type="button" onClick={() => genreButtonClickHandler(1)} className={`${styles.sideButtonMenu}`}>Add Genre</button>
+        <button type="button" onClick={() => genreButtonClickHandler(2)} className={`${styles.sideButtonMenu}`}>Delete Genre</button>
+        <button type="button" className={`${styles.sideButtonMenu}`}>Add Actor</button>        
+      </div>
+      {genreWindow ? 
+        <GenreWindow type={genreWindow} onGenreCreated={saveNewGenreHandler} onGenreDeleted={deleteGenreHandler} genres={genres}/> : 
+        <></>
+      }
+
+      <div className={`${styles.topPopUp}`} style={{height: topPopUpWindow, backgroundColor: topPopUpColor}}>
+        <label className={`${styles.topPopUpText}`} style={{height: topPopUpWindow}}>{topPopUpMessage}</label>
+      </div>
       
+    
       <div className={`${styles.main}`}>
         <MovieList movies={movies} genres={genres} onMovieSave={saveMovieHandler} onMovieDelete={deleteMovieHandler}/>
       </div>

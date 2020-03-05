@@ -1,0 +1,54 @@
+.window {
+    position: fixed;
+    right: 160px;
+    width: 250px;
+    max-width: 50%;   
+    min-height: 260px;   
+    background-color: #dfe5ff;
+    top: 90px;
+    z-index: 1;
+    border-radius: 5px; 
+    opacity: 0.95;
+}
+
+.content {
+    padding: 5px;
+}
+
+.title {
+    margin-bottom: 0;
+    color: black;
+    font-weight: bold;
+    padding-bottom: 8px;
+    padding-top: 8px;
+    font-size: larger;
+}
+
+.container {
+    height: 120px;
+    border-width: 1px;
+    border-color: red($color: #000000);
+}
+
+.genreInput{
+    height: 40px;
+    width: 100%;
+    border: none;
+    padding: 10px;
+}
+
+.confirm {
+    width: 100%;
+    height: 30px;
+    margin-top: auto;
+    background-color: white;
+    line-height: 1;
+    text-align: center;
+}
+
+.error{
+    width: 100%;
+    height: 100px;
+    color: red;
+    padding: 5px;
+}

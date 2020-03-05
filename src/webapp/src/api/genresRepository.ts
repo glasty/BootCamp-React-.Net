@@ -1,5 +1,5 @@
 import IGenre from "../model/IGenre";
-import Axios from "axios";
+import Axios, { AxiosResponse } from "axios";
 import { API_URL_G } from "./constants";
 
 class GenreRepository {
@@ -17,6 +17,14 @@ class GenreRepository {
       console.log(`[GenreRepository.save]: Retrieved response`, response);
 
       return response.data;
+      };
+
+    delete = async (genre: IGenre): Promise<AxiosResponse> => {
+      const response = await Axios.delete<IGenre>(API_URL_G + "/" + genre.id);
+
+      console.log(`[GenreRepository.delete]: Retrieved response`, response);
+
+      return response;
     }
 }
 

@@ -24,7 +24,7 @@ namespace Bootcamp.WebAPI.Data
         {
 
             genreList = new GenreRepository();
-           
+            
             movies = new Collection<Movie>
             {
                 new Movie
