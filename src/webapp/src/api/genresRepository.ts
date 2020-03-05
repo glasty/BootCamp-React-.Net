@@ -9,7 +9,7 @@ class GenreRepository {
         console.log(`[MovieRepository.getAll]: Retrieved data`, data);
     
         return data;
-      };
+    };
 
     save = async (genre: IGenre): Promise<IGenre> => {
       const response = await Axios.post<IGenre>(API_URL_G, genre);
@@ -17,7 +17,7 @@ class GenreRepository {
       console.log(`[GenreRepository.save]: Retrieved response`, response);
 
       return response.data;
-      };
+    };
 
     delete = async (genre: IGenre): Promise<AxiosResponse> => {
       const response = await Axios.delete<IGenre>(API_URL_G + "/" + genre.id);

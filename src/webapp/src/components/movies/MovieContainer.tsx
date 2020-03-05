@@ -57,11 +57,11 @@ const MovieContainer: React.FC<IMovieContainerProps> = ({ movie, onMovieSave, sa
 
   return (
     <div className={`card ${styles.movieContainer}`}>
-      {movie.id > 0 ? (editMode ? (
-        <MovieEdit movie={movie} genres={genres} onMovieSave={saveMovieHandler} onMovieDiscard={discardMovieHandler}/>
-      ) : (
-        <MovieDisplay movie={movie} onMovieEdit={editMovieHandler} /> 
-      )) : <MovieNew movie={movie} genres={genres} onMovieSave={saveMovieHandler} onMovieDiscard={removeMovieHandler}/>}      
+      {movie.id > 0 ? 
+        (editMode ? (
+          <MovieEdit movie={movie} genres={genres} onMovieSave={saveMovieHandler} onMovieDiscard={discardMovieHandler}/>) : 
+          (<MovieDisplay movie={movie} onMovieEdit={editMovieHandler} />)) : 
+        <MovieNew movie={movie} genres={genres} onMovieSave={saveMovieHandler} onMovieDiscard={removeMovieHandler}/>}      
     </div>
   );
 };

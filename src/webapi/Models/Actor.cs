@@ -10,6 +10,7 @@ namespace Bootcamp.WebAPI.Models
         public string MiddleName { get; set; }
         public string LastName { get; set; }
         public DateTime? BirthDate { get; set; }
+        public string Photo { get; set; }
 
         public ICollection<Movie> Movie { get; set; } = new Collection<Movie>();
     }

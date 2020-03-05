@@ -98,6 +98,11 @@ namespace Bootcamp.WebAPI.Data
             return movies.FirstOrDefault(m => m.Id == id);
         }
 
+        public Movie GetByName(string name)
+        {
+            return movies.FirstOrDefault(m => m.Title == name);
+        }
+
         public Movie Save(Movie entity)
         {
             if (entity.Id > 0)

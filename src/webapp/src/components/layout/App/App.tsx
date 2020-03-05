@@ -6,6 +6,9 @@ import MovieRepository from "../../../api/moviesRepository";
 import MovieList from "../../movies/MovieList";
 import GenreRepository from "../../../api/genresRepository";
 import GenreWindow from "../../genres/GenreWindow";
+import ActorList from "../../actors/ActorList";
+import IActor from "../../../model/IActor";
+import ActorRepository from "../../../api/actorsRepository";
 
 /*
  * "Root" component that encapsulates whole application. State is managed on this level
@@ -14,14 +17,14 @@ import GenreWindow from "../../genres/GenreWindow";
 const App: React.FC = () => {
   const [movies, setMovies] = useState<IMovie[]>([]);
   const [genres, setGenres] = useState<IGenre[]>([]);
-  
+  const [actors, setActors] = useState<IActor[]>([]);
   const [menuPanel, setMenuPanel] = useState<number>(0);
   const [genreWindow, setGenreWindow] = useState<number>(0);
-  
   const [topPopUpWindow, setTopPopUp] = useState<number>(0);
   const [topPopUpMessage, setTopPopUpMessage] = useState<string>("");
   const [topPopUpColor, setTopPopUpColor] = useState<string>("");
-
+  const [navigation, setNav] = useState<string>("Movies");
+  
   /*
    * Hook for loading data. Function fetchData() was made async to simplify loading data via MovieRepostiory and GenreRepository.
    */
@@ -29,12 +32,16 @@ const App: React.FC = () => {
     const fetchData = async () => {
       const repoM = new MovieRepository();
       const repoG = new GenreRepository();
+      const repoA = new ActorRepository();
 
       const loadedMovies = await repoM.getAll();
       setMovies(loadedMovies);
 
       const loadedGenres = await repoG.getAll();
       setGenres(loadedGenres);
+
+      const loadedActors = await repoA.getAll();
+      setActors(loadedActors);
     };
 
     fetchData();
@@ -186,7 +193,7 @@ const App: React.FC = () => {
       setTopPopUp(45);
       setTopPopUpMessage(message);
       setTopPopUpColor(color);
-      setTimeout(() => {setTopPopUp(0)}, 4000);
+      setTimeout(() => {setTopPopUp(0)}, 3000);
     }
   }
 
@@ -210,9 +217,22 @@ const App: React.FC = () => {
         <label className={`${styles.topPopUpText}`} style={{height: topPopUpWindow}}>{topPopUpMessage}</label>
       </div>
       
-    
+
+      <ul className={`nav nav-tabs ${styles.navBar}`}>
+        <li className="nav-item">
+          <a className={navigation === "Movies" ? `nav-link active ${styles.navItem}` : `nav-link ${styles.navItem}`} href="#" onClick={() => setNav("Movies")}>Movies</a>  
+        </li>
+        <li className="nav-item">
+          <a className={navigation === "Actors" ? `nav-link active ${styles.navItem}` : `nav-link ${styles.navItem}`} href="#" onClick={() => setNav("Actors")}>Actors</a>
+        </li>
+      </ul>
+
       <div className={`${styles.main}`}>
-        <MovieList movies={movies} genres={genres} onMovieSave={saveMovieHandler} onMovieDelete={deleteMovieHandler}/>
+        { navigation === "Movies" ? 
+          <MovieList movies={movies} genres={genres} onMovieSave={saveMovieHandler} onMovieDelete={deleteMovieHandler}/> : 
+          <ActorList actors={actors} movies={movies}/>
+        }
+        
       </div>
     </div>
     

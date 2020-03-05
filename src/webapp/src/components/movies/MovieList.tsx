@@ -31,7 +31,6 @@ const MovieList: React.FC<IMovieListProps> = ({ movies, genres, onMovieSave, onM
   return (
     <>
       <div className="container">
-        <h2>Movies</h2>
         <div className="row">
           {movies.map(m => (
             <div key={m.id} className={editList.indexOf(m.id) === -1 && m.id > 0 ? "col-xl-4 col-lg-6 col-sm-12" : "col-xl-8 col-lg-12 col-sm-12"}>
