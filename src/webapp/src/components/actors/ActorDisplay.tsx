@@ -1,14 +1,33 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import IActor from "../../model/IActor";
 import styles from "./ActorDisplay.module.scss";
 
 interface IActorDisplayProps { 
     actor: IActor;
+
+    onActorEdit: (actor: IActor) => void;
 }
 
-const ActorDisplay: React.FC<IActorDisplayProps> = ({ actor }) => {
+const ActorDisplay: React.FC<IActorDisplayProps> = ({ actor, onActorEdit }) => {
+    const [ birth, setBirth ] = useState<string>("");
+    
+    const actorEditHandler = (e: React.SyntheticEvent<HTMLButtonElement>) => {
+        onActorEdit(actor);
+      };
+
     useEffect(() => {
-        console.log("Actor: ", actor.birthDate);
+        setBirth(prevState => {
+            var newDate = "";
+            var dObject = new Date(actor.birthDate);
+            
+            newDate = newDate.concat(dObject.getDate().toString(), "/");
+            newDate = newDate.concat(dObject.getMonth().toString(), "/");
+            newDate = newDate.concat(dObject.getFullYear().toString());
+           
+            return newDate;
+        })
+
+    
     });
 
     
@@ -25,7 +44,7 @@ const ActorDisplay: React.FC<IActorDisplayProps> = ({ actor }) => {
                     <tbody>
                         <tr>
                         <th>Birth year:</th>
-                        <td>{actor.birthDate}</td>
+                        <td>{birth}</td>
                         </tr>
                         <tr>
                         <th>Movies:</th>
@@ -48,7 +67,7 @@ const ActorDisplay: React.FC<IActorDisplayProps> = ({ actor }) => {
                     type="button"
                     className="btn btn-sm btn-primary"
                     data-movie-id={actor.id.toString()}
-                    onClick={() => {}}
+                    onClick={actorEditHandler}
                 >
                     Edit
                 </button>

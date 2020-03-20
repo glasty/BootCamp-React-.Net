@@ -8,7 +8,7 @@ export default interface IActor {
     firstName: string;
     middleName: string;
     lastName: string;
-    birthDate: Date;
+    birthDate: string;
     photo: string;
     movie: IMovie[];
   }
